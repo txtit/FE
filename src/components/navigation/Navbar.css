@@ -1,0 +1,14 @@
+@media (max-width: 991.98px) {
+    .navbar-nav {
+      display: none; /* Ẩn menu khi màn hình thu nhỏ */
+    }
+    .navbar-collapse.show .navbar-nav {
+      display: flex; /* Hiển thị menu khi toggle được kích hoạt */
+      flex-direction: column; /* Hiển thị các mục menu dọc */
+      padding-top: 10px; /* Để các mục menu không bị che khuất */
+    }
+    .navbar-nav .nav-item {
+      margin-bottom: 10px; /* Để các mục menu không bị gần nhau quá */
+    }
+  }
+  

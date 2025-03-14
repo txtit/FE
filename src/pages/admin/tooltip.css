@@ -1,0 +1,9 @@
+/* tooltip.css */
+.react-tooltip-lite {
+    background-color: #333; /* Màu nền của tooltip */
+    color: #fff; /* Màu chữ của tooltip */
+    border-radius: 4px; /* Đường viền bo tròn */
+    box-shadow: #fff;
+    padding: 8px 12px; /* Khoảng cách nội bộ của tooltip */
+    font-size: 14px; /* Kích thước chữ của tooltip */
+}

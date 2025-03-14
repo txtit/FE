@@ -1,0 +1,51 @@
+.underline-container {
+    position: relative;
+    display: inline-block;
+}
+
+.underline-container::after {
+    content: '';
+    position: absolute;
+    bottom: -0.313rem; /* Điều chỉnh giá trị này để đặt đúng vị trí của gạch chân */
+    left: 50%;
+    height: 0.125rem; /* Độ dày của gạch chân */
+    background-color: #FFC9A1;
+    transform: translateX(-50%);
+}
+
+.underline-container::before {
+    content: '';
+    position: absolute;
+    bottom: -0.625rem; /* Điều chỉnh giá trị này để đặt đúng vị trí của gạch chân */
+    left: 50%;
+    height: 0.125rem; /* Độ dày của gạch chân */
+    background-color: #FFC9A1;
+    transform: translateX(-50%);
+}
+
+@media only screen and (max-width: 600px) {
+    .underline-container::after {
+        width: 40%;
+    }
+    .underline-container::before {
+        width: 75%;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .underline-container::after {
+        width: 12.5%;
+    }
+    .underline-container::before {
+        width: 25%;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .underline-container::after {
+        width: 8%;
+    }
+    .underline-container::before {
+        width: 15%;
+    }
+}
