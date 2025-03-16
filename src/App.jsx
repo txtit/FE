@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-// import Navbar from "./pages/Navbar";
+import Navbar from "./pages/Navbar";
 import AdminPage from "./pages/admin/AdminPage";
 import BlogCards from "./pages/user/BlogCards";
 import "./assets/app.css";
@@ -27,7 +27,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      {!hideNavbar}
+      {!hideNavbar && <Navbar/>}
       <div className="p-6">{children}</div>
       {!hideNavbar && <Footer />}
     </>
