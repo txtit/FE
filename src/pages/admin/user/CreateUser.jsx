@@ -75,7 +75,7 @@ const CreateUser = () => {
       if (response.status === 201) {
         toast.success("User created successfully");
         setParams({ keyword: formData.name }, { replace: true });
-        navigate("/admin");
+        navigate("/admin/manageUser");
       } else {
         toast.error(response.message || "Failed to create user");
       }

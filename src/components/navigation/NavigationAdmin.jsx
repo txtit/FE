@@ -156,14 +156,14 @@ const NavigationAdmin = ({ title }) => {
                 </span>
               </div>
               {/* AddProduct  */}
-              <div className="nav-item">
+              {/* <div className="nav-item">
                 <span
                   onClick={handleOpenCreateProduct}
                   className="px-3 py-2 flex items-center text-base font-semibold  leading-snug text-white hover:opacity-75" // Larger text size
                 >
                   <i className="fa-solid fa-user-plus mr-2" /> Add Product
                 </span>
-              </div>
+              </div> */}
 
               {/* Logout */}
               <div className="nav-item">
