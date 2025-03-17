@@ -85,7 +85,7 @@ const UpdateUser = () => {
 
       if (response) {
         toast.success("User updated successfully");
-        navigate("/admin");
+        navigate("/admin/manageUser");
       } else {
         toast.error(response.message || "Failed to update user");
       }

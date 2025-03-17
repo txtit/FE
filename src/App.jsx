@@ -22,6 +22,7 @@ import UpdateUser from "./pages/admin/user/UpdateUser";
 import ManageProduct from "./pages/admin/product/ManagerProduct";
 import CreateProduct from "./pages/admin/product/CreateProduct";
 import UpdateProduct from "./pages/admin/product/UpdateProduct";
+import ProtectedAuth from "./components/ProtectedAuth";
 
 // Layout cho các trang thông thường (user)
 const Layout = ({ children }) => {
@@ -59,8 +60,8 @@ const App = () => {
               <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/profile" element={<ProfileCards />} />
-                <Route path="/product" element={<Product />} />
+                <Route path="/profile" element={<ProtectedAuth><ProfileCards /></ProtectedAuth> } />
+                <Route path="/product" element={<ProtectedAuth><Product /></ProtectedAuth>} />
                 <Route
                   path="/detail"
                   element={

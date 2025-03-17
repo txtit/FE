@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@material-tailwind/react";
-import { apiGetUser } from "../../apis/user";
+import { apiGetUser, apiUpdateUser } from "../../apis/user";
+import { toast } from "react-toastify";
 
 const ProfileCard = () => {
   // State để quản lý trạng thái disabled của các input
@@ -32,8 +33,20 @@ const ProfileCard = () => {
   };
 
   // Xử lý khi nhấn "Lưu"
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     console.log("Lưu dữ liệu:", formData);
+     try {
+          // Call API to update user
+          const response = await apiUpdateUser( formData);
+    
+          if (response) {
+            toast.success("User updated successfully");
+          } else {
+            toast.error(response.message || "Failed to update user");
+          }
+        } catch (error) {
+          toast.error("Server error, please try again later");
+        }
     setUser(formData); // Cập nhật lại user với dữ liệu mới
     setIsEditable(false);
   };

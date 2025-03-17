@@ -6,7 +6,23 @@ const API = axios.create({
   withCredentials: true, // Nếu dùng Laravel Sanctum
 });
 
-export const apiUpdateUser = (data) => API.put("/me", data);
+export const apiUpdateUser = async () => {
+  try {
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    if (!token) throw new Error("Không tìm thấy token!");
+
+    const response = await API.put("/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log("Thông tin user:", response);
+    return response.data; // Trả về dữ liệu user
+
+  } catch (error) {
+    console.error("Lỗi khi lấy user:", error.response?.data || error.message);
+    return null; // Trả về null nếu có lỗi
+  }
+};
 // Các hàm gọi API
   export const apiGetUser = async () => {
     try {
