@@ -19,6 +19,9 @@ import NavigationAdmin from "./components/navigation/NavigationAdmin";
 import ManagerUser from "./pages/admin/user/ManagerUser";
 import CreateUser from "./pages/admin/user/CreateUser";
 import UpdateUser from "./pages/admin/user/UpdateUser";
+import ManageProduct from "./pages/admin/product/ManagerProduct";
+import CreateProduct from "./pages/admin/product/CreateProduct";
+import UpdateProduct from "./pages/admin/product/UpdateProduct";
 
 // Layout cho các trang thông thường (user)
 const Layout = ({ children }) => {
@@ -77,9 +80,12 @@ const App = () => {
         {/* Routes cho admin */}
         <Route path="/admin/*"element={<AdminLayout>
               <Routes>
-                <Route path=""element={ <ProtectedRoute><ManagerUser /> </ProtectedRoute>}/>
+                <Route path="manageUser"element={ <ProtectedRoute><ManagerUser /> </ProtectedRoute>}/>
                 <Route path="addUser" element={ <ProtectedRoute> <CreateUser /> </ProtectedRoute>} />
                 <Route path="updateUser/:id" element={ <ProtectedRoute> <UpdateUser/> </ProtectedRoute>} />
+                <Route path="manageProduct"element={ <ProtectedRoute><ManageProduct /> </ProtectedRoute>}/>
+                <Route path="addProduct" element={ <ProtectedRoute> <CreateProduct /> </ProtectedRoute>} />
+                <Route path="updateProduct/:id" element={ <ProtectedRoute> <UpdateProduct/> </ProtectedRoute>} />
               </Routes>
             </AdminLayout>
           }

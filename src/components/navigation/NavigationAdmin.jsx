@@ -83,13 +83,10 @@ const NavigationAdmin = ({ title }) => {
     // Optionally, display a toast notification
   };
   const handleOpenCreate = e => {
-    // Clear session data
-    // setLoading(true);
-    // // localStorage.removeItem('user');
-    // // Redirect to the login page
-    // setTimeout(() => {
     navigate("/admin/addUser");
-    // Optionally, display a toast notification
+  };
+  const handleOpenCreateProduct = e => {
+    navigate("/admin/addProduct");
   };
   const handleOpenRecycle = e => {
     // Clear session data
@@ -133,7 +130,7 @@ const NavigationAdmin = ({ title }) => {
         <div className="container mx-auto py-2 ">
           <div className="flex justify-between items-center pt-2">
             <Link
-              to={"/admin"}
+              to={"/admin/manageUser"}
               className="flex items-center text-white text-xl font-semibold"
             >
               <i className="fas fa-code me-2 text-2xl" /> {/* Larger title */}
@@ -156,6 +153,15 @@ const NavigationAdmin = ({ title }) => {
                   className="px-3 py-2 flex items-center text-base font-semibold  leading-snug text-white hover:opacity-75" // Larger text size
                 >
                   <i className="fa-solid fa-user-plus mr-2" /> Add User
+                </span>
+              </div>
+              {/* AddProduct  */}
+              <div className="nav-item">
+                <span
+                  onClick={handleOpenCreateProduct}
+                  className="px-3 py-2 flex items-center text-base font-semibold  leading-snug text-white hover:opacity-75" // Larger text size
+                >
+                  <i className="fa-solid fa-user-plus mr-2" /> Add Product
                 </span>
               </div>
 

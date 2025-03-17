@@ -25,6 +25,7 @@ export const apiLogin = async (data)  => {
     if(respone.data.access_token){
       localStorage.setItem("token", respone.data.access_token);
       localStorage.setItem("role", respone.data.role);
+      localStorage.setItem("name",respone.data.name );
     }
     return respone;
   }catch (error){

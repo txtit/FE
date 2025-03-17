@@ -9,13 +9,19 @@ const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async data => {
-    const response = await apiLogin(data);
-    console.log(response);
-    if (response.status == 200) {
-      navigate("/profile");
-      toast.success("Đăng nhập thành công");
-    } else {
-      toast.error(`Đăng nhập thất bại${response.message}`);
+    try {
+      const response = await apiLogin(data);
+      console.log("API Response:", response); // Kiểm tra phản hồi từ API
+  
+      if (response?.status == 200) {
+        navigate("/profile");
+        toast.success("Đăng nhập thành công");
+      } else {
+        throw new Error(response?.message || "Lỗi không xác định");
+      }
+    } catch (error) {
+      console.error("Đăng nhập lỗi:", error);
+      toast.error(`Đăng nhập thất bại: ${error.message}`);
     }
   };
 

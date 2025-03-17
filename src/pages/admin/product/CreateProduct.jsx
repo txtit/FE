@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { apiRegister } from "../../../apis/auth";
+import { apiCreateProduct } from "../../../apis/product";
 
-const CreateUser = () => {
+const CreateProduct = () => {
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    password: "",
-    password_confirmation: ""
+    description: "",
+    price: "",
+    image: "",
+    stock: "",
+    category_id: ""
   });
 
   const [errors, setErrors] = useState({});
@@ -32,7 +34,7 @@ const CreateUser = () => {
   };
 
   const handleGoBack = () => {
-    navigate("/admin/manageUser");
+    navigate("/admin");
   };
 
   const validateForm = () => {
@@ -41,20 +43,27 @@ const CreateUser = () => {
     if (!formData.name.trim()) {
       newErrors.name = "Name is required.";
     }
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required.";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid.";
+    if (!formData.description.trim()) {
+      newErrors.description = "Description is required.";
     }
-    if (!formData.password.trim()) {
-      newErrors.password = "Password is required.";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
+    if (!formData.price.trim()) {
+      newErrors.price = "Price is required.";
+    } else if (isNaN(formData.price) || formData.price <= 0) {
+      newErrors.price = "Price must be a valid number greater than 0.";
     }
-    if (!formData.password_confirmation.trim()) {
-      newErrors.password_confirmation = "Please confirm your password.";
-    } else if (formData.password !== formData.password_confirmation) {
-      newErrors.password_confirmation = "Passwords do not match.";
+    if (!formData.image.trim()) {
+      newErrors.image = "Image URL is required.";
+    }
+    if (!formData.stock.trim()) {
+      newErrors.stock = "Stock is required.";
+    } else if (isNaN(formData.stock) || formData.stock < 0) {
+      newErrors.stock =
+        "Stock must be a valid number greater than or equal to 0.";
+    }
+    if (!formData.category_id.trim()) {
+      newErrors.category_id = "Category ID is required.";
+    } else if (isNaN(formData.category_id)) {
+      newErrors.category_id = "Category ID must be a valid number.";
     }
 
     setErrors(newErrors);
@@ -69,15 +78,15 @@ const CreateUser = () => {
     }
 
     try {
-      // Call API to register user
-      const response = await apiRegister(formData);
+      // Call API to create product
+      const response = await apiCreateProduct(formData);
 
-      if (response.status === 201) {
-        toast.success("User created successfully");
+      if (response.status === 200) {
+        toast.success("Product created successfully");
         setParams({ keyword: formData.name }, { replace: true });
-        navigate("/admin");
+        navigate("/admin/manageProduct");
       } else {
-        toast.error(response.message || "Failed to create user");
+        toast.error(response.message || "Failed to create product");
       }
     } catch (error) {
       toast.error("Server error, please try again later");
@@ -89,7 +98,9 @@ const CreateUser = () => {
       <div className="max-w-md w-full space-y-8">
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="bg-blue-600 px-6 py-4">
-            <h2 className="text-white text-xl font-semibold">Add New User</h2>
+            <h2 className="text-white text-xl font-semibold">
+              Add New Product
+            </h2>
           </div>
           <div className="px-6 py-8">
             <form onSubmit={handleFormSubmit} className="space-y-6">
@@ -106,7 +117,7 @@ const CreateUser = () => {
                   id="name"
                   name="name"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter Name"
+                  placeholder="Enter Product Name"
                   value={formData.name}
                   onChange={handleInputChange}
                 />
@@ -116,82 +127,127 @@ const CreateUser = () => {
                   </p>}
               </div>
 
-              {/* Email Field */}
+              {/* Description Field */}
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="description"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Email
+                  Description
                 </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
+                <textarea
+                  id="description"
+                  name="description"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter Email"
-                  value={formData.email}
+                  placeholder="Enter Product Description"
+                  value={formData.description}
                   onChange={handleInputChange}
                 />
-                {errors.email &&
+                {errors.description &&
                   <p className="text-sm text-red-600 mt-1">
-                    {errors.email}
+                    {errors.description}
                   </p>}
               </div>
 
-              {/* Password Field */}
+              {/* Price Field */}
               <div>
                 <label
-                  htmlFor="password"
+                  htmlFor="price"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Password
+                  Price
                 </label>
                 <input
-                  type="password"
-                  id="password"
-                  name="password"
+                  type="number"
+                  id="price"
+                  name="price"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter Password"
-                  value={formData.password}
+                  placeholder="Enter Product Price"
+                  value={formData.price}
                   onChange={handleInputChange}
                 />
-                {errors.password &&
+                {errors.price &&
                   <p className="text-sm text-red-600 mt-1">
-                    {errors.password}
+                    {errors.price}
                   </p>}
               </div>
 
-              {/* Password Confirmation Field */}
+              {/* Image Field */}
               <div>
                 <label
-                  htmlFor="password_confirmation"
+                  htmlFor="image"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Confirm Password
+                  Image URL
                 </label>
                 <input
-                  type="password"
-                  id="password_confirmation"
-                  name="password_confirmation"
+                  type="text"
+                  id="image"
+                  name="image"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Confirm Password"
-                  value={formData.password_confirmation}
+                  placeholder="Enter Image URL"
+                  value={formData.image}
                   onChange={handleInputChange}
                 />
-                {errors.password_confirmation &&
+                {errors.image &&
                   <p className="text-sm text-red-600 mt-1">
-                    {errors.password_confirmation}
+                    {errors.image}
                   </p>}
               </div>
 
-              {/* Add User Button */}
+              {/* Stock Field */}
+              <div>
+                <label
+                  htmlFor="stock"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Stock
+                </label>
+                <input
+                  type="number"
+                  id="stock"
+                  name="stock"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter Product Stock"
+                  value={formData.stock}
+                  onChange={handleInputChange}
+                />
+                {errors.stock &&
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors.stock}
+                  </p>}
+              </div>
+
+              {/* Category ID Field */}
+              <div>
+                <label
+                  htmlFor="category_id"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Category ID
+                </label>
+                <input
+                  type="number"
+                  id="category_id"
+                  name="category_id"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter Category ID"
+                  value={formData.category_id}
+                  onChange={handleInputChange}
+                />
+                {errors.category_id &&
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors.category_id}
+                  </p>}
+              </div>
+
+              {/* Add Product Button */}
               <div>
                 <button
                   type="submit"
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  Add User
+                  Add Product
                 </button>
               </div>
 
@@ -213,4 +269,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default CreateProduct;

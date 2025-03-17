@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { apiGetAllUser } from "../../../apis/user";
 import { IconButton, Pagination, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { apiGetAllProduct } from "../../../apis/product";
 
-const ManageUser = () => {
-  const [users, setUsers] = useState([]);
+const ManageProduct = () => {
+  const [users, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Trạng thái tìm kiếm
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await apiGetAllUser();
+        const response = await apiGetAllProduct();
         if (response.status === 200) {
-          setUsers(response.data);
+          setProducts(response.data);
         } else {
           toast.error("Lỗi khi tải dữ liệu người dùng");
         }
@@ -25,21 +25,24 @@ const ManageUser = () => {
         toast.error("Lỗi kết nối máy chủ");
       }
     };
-    fetchUsers();
+    fetchProducts();
   }, []);
 
   // Lọc danh sách người dùng theo từ khóa tìm kiếm
-  const filteredUsers = users.filter(
+  const filteredProducts = users.filter(
     user =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Phân trang dữ liệu
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const indexOfLastProduct = currentPage * usersPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - usersPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+  const totalPages = Math.ceil(filteredProducts.length / usersPerPage);
 
   return (
     <div className="container mx-auto p-4">
@@ -73,7 +76,7 @@ const ManageUser = () => {
             </tr>
           </thead>
           <tbody>
-            {currentUsers.map((user, index) =>
+            {currentProducts.map((user, index) =>
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-2">
                   {user.id}
@@ -85,7 +88,7 @@ const ManageUser = () => {
                   {user.email}
                 </td>
                 <td className="px-4 py-2">
-                  <Link to={`/admin/updateUser/${user.id}`}>
+                  <Link to={`/admin/updateProduct/${user.id}`}>
                     <IconButton>
                       <EditIcon className="text-green-800" />
                     </IconButton>
@@ -111,4 +114,4 @@ const ManageUser = () => {
   );
 };
 
-export default ManageUser;
+export default ManageProduct;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiLogout } from "../apis/auth";
 import { toast } from "react-toastify";
@@ -6,6 +6,17 @@ import { toast } from "react-toastify";
 const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const [userName, setUserName] = useState([]);
+
+  const getUserName = localStorage.getItem("name");
+  console.log(getUserName);
+  useEffect(
+    () => {
+      setUserName(getUserName);
+      console.log(userName);
+    },
+    [navigate]
+  );
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -368,7 +379,7 @@ const Navbar = () => {
                         alt="Avatar"
                         className="w-8 h-8 rounded-full mr-2"
                       />
-                      <span>John Doe</span> {/* Thay bằng tên người dùng */}
+                      <span>{userName}</span> {/* Thay bằng tên người dùng */}
                       <i className="fas fa-angle-down ml-2" />
                     </button>
 
@@ -386,7 +397,7 @@ const Navbar = () => {
                           </li>
                           <li>
                             <a
-                              href="/admin" // Thay bằng đường dẫn đến trang quản trị
+                              href="/admin/manageUser" // Thay bằng đường dẫn đến trang quản trị
                               className="block w-full py-2 px-4 hover:bg-gray-100 rounded-[8.8px]"
                             >
                               Trang quản trị

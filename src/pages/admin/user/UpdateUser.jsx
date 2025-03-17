@@ -50,7 +50,7 @@ const UpdateUser = () => {
   };
 
   const handleGoBack = () => {
-    navigate("/admin");
+    navigate("/admin/manageUser");
   };
 
   const validateForm = () => {
