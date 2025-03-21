@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { apiGetAllCategories } from "../../../apis/categories";
-import { apiGetOrderById } from "../../../apis/Order";
+// import { apiGetOrderById } from "../../../apis/Order";
 
 const UpdateOrder = () => {
   const { id } = useParams();
@@ -20,27 +20,27 @@ const UpdateOrder = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchOrder = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const data = await apiGetOrderById(id);
-      console.log(data);
-      if (data) {
-        setFormData({
-          name: data.name || "",
-          total: data.total || "",
-          description: data.description || "",
-          categories: data.categories || "",
-          user: data.user || {},
-          products: data.products || []
-        });
-      }
-    } catch (error) {
-      toast.error("Không thể tải dữ liệu đơn hàng!");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id]);
+  // const fetchOrder = useCallback(async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const data = await apiGetOrderById(id);
+  //     console.log(data);
+  //     if (data) {
+  //       setFormData({
+  //         name: data.name || "",
+  //         total: data.total || "",
+  //         description: data.description || "",
+  //         categories: data.categories || "",
+  //         user: data.user || {},
+  //         products: data.products || []
+  //       });
+  //     }
+  //   } catch (error) {
+  //     toast.error("Không thể tải dữ liệu đơn hàng!");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }, [id]);
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -54,7 +54,7 @@ const UpdateOrder = () => {
   }, []);
 
   useEffect(() => {
-    fetchOrder();
+    // fetchOrder();
     fetchCategories();
   }, [fetchOrder, fetchCategories]);
 
