@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { apiGetOrderById, apiUpdateOrderById } from "../../../apis/Order";
 import { apiGetAllCategories } from "../../../apis/categories";
+import { apiGetOrderById } from "../../../apis/Order";
 
 const UpdateOrder = () => {
   const { id } = useParams();
