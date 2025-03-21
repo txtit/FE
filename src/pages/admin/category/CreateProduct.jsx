@@ -81,7 +81,7 @@ const CreateProduct = () => {
       // Call API to create product
       const response = await apiCreateProduct(formData);
 
-      if (response) {
+      if (response.status === 200) {
         toast.success("Product created successfully");
         setParams({ keyword: formData.name }, { replace: true });
         navigate("/admin/manageProduct");

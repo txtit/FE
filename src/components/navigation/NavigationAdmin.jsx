@@ -7,13 +7,16 @@ import path from "../../utils/path";
 import DropdownFilter from "../Filter/RecycleFilter";
 import { Button, IconButton } from "@mui/material";
 import { apiLogout } from "../../apis/auth";
+import DropdownMenu from "../DropdownMenu";
 
 const NavigationAdmin = ({ title }) => {
   const location = useLocation();
   const navigate = useNavigate();
   // const { setLoading } = useLoading();
   const [content, setContent] = useState("");
-
+  const [isDropdownUserOpen, setIsDropdownUserOpen] = useState(false);
+  const [isDropdownProductOpen, setIsDropdownProductOpen] = useState(false);
+  const [isDropdownOrderOpen, setIsDropdownOrderOpen] = useState(false);
   useEffect(
     () => {
       // Lấy phần cuối của đường dẫn từ location.pathname
@@ -21,32 +24,72 @@ const NavigationAdmin = ({ title }) => {
       const lastSegment = pathSegments[pathSegments.length - 1]; // Phần cuối của đường dẫn
 
       // Kiểm tra giá trị cuối cùng trong đường dẫn và cập nhật giá trị cho selectedValue
-      if (lastSegment === "manage-user") {
+      if (lastSegment === "manageUser") {
         setContent("QUẢN LÝ NGƯỜI DÙNG");
-      } else if (lastSegment === "manage-dental") {
-        setContent("QUẢN LÝ NHA KHOA");
-      } else if (lastSegment === "manage-product") {
+      } else if (lastSegment === "manageProduct") {
         setContent("QUẢN LÝ SẢN PHẨM");
+      } else if (lastSegment === "manageOrder") {
+        setContent("QUẢN LÝ ĐƠN HÀNG");
       } else {
         setContent("");
       }
     },
     [location]
   );
+  const handleOpenCreate = e => {
+    navigate("/admin/addUser");
+  };
+  const handleOpenProduct = e => {
+    navigate("/admin/addProduct");
+  };
+  const handleOpenOrder = e => {
+    navigate("/admin/addOrder");
+  };
+  const handleOpenCategory = e => {
+    navigate("/admin/addCategory");
+  };
 
+  const userDropdownItems = [
+    { label: "Create New User", onClick: handleOpenCreate },
+    { label: "Import User", onClick: () => console.log("Import User clicked") },
+    { label: "Export User", onClick: () => console.log("Export User clicked") }
+  ];
+  const productDropdownItems = [
+    { label: "Create New Product", onClick: handleOpenProduct },
+    // { label: "Create New Category", onClick: handleOpenProduct },
+    {
+      label: "Import Product",
+      onClick: () => console.log("Import Product clicked")
+    },
+    {
+      label: "Export Product",
+      onClick: () => console.log("Export Product clicked")
+    }
+  ];
+  const orderDropdownItems = [
+    { label: "Create New Order ", onClick: handleOpenOrder },
+    // { label: "Create New Category", onClick: handleOpenOrder },
+    {
+      label: "Import Order",
+      onClick: () => console.log("Import Order clicked")
+    },
+    {
+      label: "Export Order",
+      onClick: () => console.log("Export Order clicked")
+    }
+  ];
   const handleFilterChange = value => {
     if (value === "user") {
-      navigate("/admin/manage-user"); // Điều hướng đến trang quản lý người dùng
-    } else if (value === "dental") {
-      // Điều hướng đến trang quản lý nha khoa
-      navigate("/admin/manage-dental");
+      navigate("/admin/manageUser"); // Điều hướng đến trang quản lý người dùng
     } else if (value === "product") {
       // Điều hướng đến trang quản lý sản phẩm
-      navigate("/admin/manage-product");
+      navigate("/admin/manageProduct");
+    } else if (value === "order") {
+      // Điều hướng đến trang quản lý sản phẩm
+      navigate("/admin/manageOrder");
     }
   };
 
-  console.log(content);
   const handleLogout = async e => {
     // Clear session data
     try {
@@ -71,23 +114,6 @@ const NavigationAdmin = ({ title }) => {
     // Optionally, display a toast notification
   };
 
-  const handleOpenProduct = e => {
-    // Clear session data
-    setLoading(true);
-    // localStorage.removeItem('user');
-    // Redirect to the login page
-    setTimeout(() => {
-      navigate("/admin/create-product");
-      setLoading(false);
-    }, 1000);
-    // Optionally, display a toast notification
-  };
-  const handleOpenCreate = e => {
-    navigate("/admin/addUser");
-  };
-  const handleOpenCreateProduct = e => {
-    navigate("/admin/addProduct");
-  };
   const handleOpenRecycle = e => {
     // Clear session data
     setLoading(true);
@@ -101,23 +127,7 @@ const NavigationAdmin = ({ title }) => {
     }, 1000);
     // Optionally, display a toast notification
   };
-  const handleOpenHome = e => {
-    // Clear session data
-    setLoading(true);
-    // localStorage.removeItem('user');
 
-    setTimeout(() => {
-      setLoading(false);
-
-      // if (location.pathname === `${path.ADMIN}/${path.MANAGE_USER}`)
-      if (location.pathname === "/admin/manage-user") {
-        window.location.reload();
-      } else {
-        navigate("/admin/manage-user");
-        // navigate(`${path.ADMIN}/${path.MANAGE_USER}`);
-      }
-    }, 1000);
-  };
   const [collapsed, setCollapsed] = useState(true);
 
   const toggleNavbar = () => {
@@ -147,24 +157,29 @@ const NavigationAdmin = ({ title }) => {
             </button>
             <div className="flex flex-row  lg:ml-auto">
               {/* AddUser  */}
-              <div className="nav-item">
-                <span
-                  onClick={handleOpenCreate}
-                  className="px-3 py-2 flex items-center text-base font-semibold  leading-snug text-white hover:opacity-75" // Larger text size
-                >
-                  <i className="fa-solid fa-user-plus mr-2" /> Add User
-                </span>
-              </div>
-              {/* AddProduct  */}
-              {/* <div className="nav-item">
-                <span
-                  onClick={handleOpenCreateProduct}
-                  className="px-3 py-2 flex items-center text-base font-semibold  leading-snug text-white hover:opacity-75" // Larger text size
-                >
-                  <i className="fa-solid fa-user-plus mr-2" /> Add Product
-                </span>
-              </div> */}
-
+              <DropdownMenu
+                title=" User"
+                items={userDropdownItems}
+                isOpen={isDropdownUserOpen}
+                toggleDropdown={() =>
+                  setIsDropdownUserOpen(!isDropdownUserOpen)}
+              />
+              {/* AddProduct Dropdown */}
+              <DropdownMenu
+                title=" Product"
+                items={productDropdownItems}
+                isOpen={isDropdownProductOpen}
+                toggleDropdown={() =>
+                  setIsDropdownProductOpen(!isDropdownProductOpen)}
+              />
+              {/* AddOrder Dropdown
+              <DropdownMenu
+                title=" Order"
+                items={productDropdownItems}
+                isOpen={isDropdownOrderOpen}
+                toggleDropdown={() =>
+                  setIsDropdownOrderOpen(!isDropdownOrderOpen)}
+              /> */}
               {/* Logout */}
               <div className="nav-item">
                 <span
@@ -186,21 +201,7 @@ const NavigationAdmin = ({ title }) => {
         }
       >
         {/* Sử dụng DropdownFilter */}
-        <h2
-          style={{
-            textAlign: "start",
-            fontFamily: "system-ui",
-            color: "#333",
-            fontSize: "50px",
-            marginLeft: "10px",
-            fontWeight: 600,
-            minWidth: "550px",
-            // borderBottom: "2px solid #ccc", // Adds a 2px solid border with a light gray color
-            paddingBottom: "10px"
-          }}
-        >
-          {content}
-        </h2>
+        <h1 className="text-2xl font-bold mb-4 mt-4">{content}</h1>
         <DropdownFilter onChange={handleFilterChange} />{" "}
       </div>
     </div>

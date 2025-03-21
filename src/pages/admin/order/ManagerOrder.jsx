@@ -4,45 +4,45 @@ import { toast } from "react-toastify";
 import { IconButton, Pagination, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { apiGetAllProduct } from "../../../apis/product";
+import { apiGetAllOrder } from "../../../apis/Order";
 
-const ManageProduct = () => {
-  const [products, setProducts] = useState([]);
+const ManageOrder = () => {
+  const [Orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Trạng thái tìm kiếm
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 5;
+  const ordersPerPage = 5;
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchOrders = async () => {
       try {
-        const response = await apiGetAllProduct();
+        const response = await apiGetAllOrder();
+        console.log(response.data.map(order => order.user.name));
+
         if (response.status === 200) {
-          setProducts(response.data);
+          setOrders(response.data);
         } else {
-          toast.error("Lỗi khi tải dữ liệu sản phẩm");
+          toast.error("Lỗi khi tải dữ liệu đơn hàng");
         }
       } catch (error) {
         toast.error("Lỗi kết nối máy chủ");
       }
     };
-    fetchProducts();
+    fetchOrders();
   }, []);
-
-  // Lọc danh sách sản phẩm theo từ khóa tìm kiếm
-  const filteredProducts = products.filter(
-    product =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.price.toLowerCase().includes(searchTerm.toLowerCase())
+  // Lọc danh sách đơn hàng theo từ khóa tìm kiếm
+  const filteredOrders = Orders.filter(
+    Order => Order.name.toLowerCase().includes(searchTerm.toLowerCase())
+    // Order.price.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Phân trang dữ liệu
-  const indexOfLastProduct = currentPage * usersPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - usersPerPage;
-  const currentProducts = filteredProducts.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = filteredOrders.slice(
+    indexOfFirstOrder,
+    indexOfLastOrder
   );
-  const totalPages = Math.ceil(filteredProducts.length / usersPerPage);
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
   return (
     <div className="container mx-auto p-4">
@@ -59,7 +59,7 @@ const ManageProduct = () => {
       <div className="flex justify-end mb-4">
         <input
           type="text"
-          placeholder="Tìm kiếm sản phẩm..."
+          placeholder="Tìm kiếm đơn hàng..."
           value={searchTerm}
           className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           onChange={e => setSearchTerm(e.target.value)}
@@ -71,28 +71,32 @@ const ManageProduct = () => {
             <tr className="bg-gray-600 border-b">
               <th className="px-4 py-2 text-left text-amber-50">ID</th>
               <th className="px-4 py-2 text-left text-amber-50">Tên</th>
-              <th className="px-4 py-2 text-left text-amber-50">Price</th>
-              <th className="px-4 py-2 text-left text-amber-50">Stock</th>
+              <th className="px-4 py-2 text-left text-amber-50">Total</th>
+              <th className="px-4 py-2 text-left text-amber-50">User</th>
+              <th className="px-4 py-2 text-left text-amber-50">UserID</th>
               <th className="px-4 py-2 text-left text-amber-50">Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {currentProducts.map((product, index) =>
+            {currentOrders.map((Order, index) =>
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-2">
-                  {product.id}
+                  {Order.id}
                 </td>
                 <td className="px-4 py-2">
-                  {product.name}
+                  {Order.name}
                 </td>
                 <td className="px-4 py-2">
-                  {product.price}
+                  {Order.total}
                 </td>
                 <td className="px-4 py-2">
-                  {product.stock}
+                  {Order.user.name}
                 </td>
                 <td className="px-4 py-2">
-                  <Link to={`/admin/updateProduct/${product.id}`}>
+                  {Order.user.id}
+                </td>
+                <td className="px-4 py-2">
+                  <Link to={`/admin/updateOrder/${Order.id}`}>
                     <IconButton>
                       <EditIcon className="text-green-800" />
                     </IconButton>
@@ -118,4 +122,4 @@ const ManageProduct = () => {
   );
 };
 
-export default ManageProduct;
+export default ManageOrder;

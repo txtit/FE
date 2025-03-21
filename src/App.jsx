@@ -23,6 +23,11 @@ import ManageProduct from "./pages/admin/product/ManagerProduct";
 import CreateProduct from "./pages/admin/product/CreateProduct";
 import UpdateProduct from "./pages/admin/product/UpdateProduct";
 import ProtectedAuth from "./components/ProtectedAuth";
+import ManageOrder from "./pages/admin/order/ManagerOrder";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import UpdateOrder from "./pages/admin/order/UpdateOrder";
+import { CartProvider } from "./components/CartContext";
+import CheckoutPage from "./pages/Cart/Payment";
 
 // Layout cho các trang thông thường (user)
 const Layout = ({ children }) => {
@@ -48,62 +53,210 @@ const AdminLayout = ({ children }) => {
   );
 };
 
+// const App = () => {
+//   return (
+//     <BrowserRouter>
+//       {/* Routes cho người dùng thông thường */}
+//       <Routes>
+//         <Route
+//           path="/*"
+//           element={
+//             <Layout>
+//               <Routes>
+//                 <Route path="/login" element={<Login />} />
+//                 <Route path="/register" element={<Register />} />
+//                 <Route path="/forgot-password" element={<ForgotPassword />} />
+//                 <Route path="/profile" element={<ProtectedAuth><ProfileCards /></ProtectedAuth> } />
+//                 <Route path="/product" element={<ProtectedAuth><Product /></ProtectedAuth>} />
+//                 <Route
+//                   path="/detail/:id"
+//                   element={
+//                     <>
+//                       <BlogSection />
+//                       <Details />
+//                       <Carsouel />
+//                     </>
+//                   }
+//                 />
+//                 <Route path="/" element={<BlogCards />} />
+//               </Routes>
+//             </Layout>
+//           }
+//         />
+
+//         {/* Routes cho admin */}
+//         <Route path="/admin/*"element={<AdminLayout>
+//               <Routes>
+//                 <Route path="manageUser"element={ <ProtectedRoute><ManagerUser /> </ProtectedRoute>}/>
+//                 <Route path="addUser" element={ <ProtectedRoute> <CreateUser /> </ProtectedRoute>} />
+//                 <Route path="updateUser/:id" element={ <ProtectedRoute> <UpdateUser/> </ProtectedRoute>} />
+//                 <Route path="manageProduct"element={ <ProtectedRoute><ManageProduct /> </ProtectedRoute>}/>
+//                 <Route path="addProduct" element={ <ProtectedRoute> <CreateProduct /> </ProtectedRoute>} />
+//                 <Route path="updateProduct/:id" element={ <ProtectedRoute> <UpdateProduct/> </ProtectedRoute>} />
+//                 <Route path="manageOrder"element={ <ProtectedRoute><ManageOrder /> </ProtectedRoute>}/>
+//                 <Route path="updateOrder/:id" element={ <ProtectedRoute> <UpdateOrder/> </ProtectedRoute>} />
+//               </Routes>
+//             </AdminLayout>
+//           }
+//         />
+//       </Routes>
+
+//       {/* ToastContainer để hiển thị thông báo */}
+//       <ToastContainer
+//         position="top-right"
+//         autoClose={3000}
+//         hideProgressBar={false}
+//         closeOnClick
+//         pauseOnHover
+//         draggable
+//       />
+//     </BrowserRouter>
+//   );
+// };
+
 const App = () => {
   return (
-    <BrowserRouter>
-      {/* Routes cho người dùng thông thường */}
-      <Routes>
-        <Route
-          path="/*"
-          element={
-            <Layout>
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/profile" element={<ProtectedAuth><ProfileCards /></ProtectedAuth> } />
-                <Route path="/product" element={<ProtectedAuth><Product /></ProtectedAuth>} />
-                <Route
-                  path="/detail"
-                  element={
-                    <>
-                      <BlogSection />
-                      <Details />
-                      <Carsouel />
-                    </>
-                  }
-                />
-                <Route path="/" element={<BlogCards />} />
-              </Routes>
-            </Layout>
-          }
-        />
+    <CartProvider>
+      <BrowserRouter>
+        {/* Routes cho người dùng thông thường */}
+        <Routes>
+          <Route
+            path="/*"
+            element={
+              <Layout>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedAuth>
+                        <ProfileCards />
+                      </ProtectedAuth>
+                    }
+                  />
+                  <Route
+                    path="/product"
+                    element={
+                      <ProtectedAuth>
+                        <Product />
+                      </ProtectedAuth>
+                    }
+                  />
+                    <Route
+                    path="/checkout"
+                    element={
+                      <ProtectedAuth>
+                        <CheckoutPage />
+                      </ProtectedAuth>
+                    }
+                  />
+                  <Route
+                    path="/detail/:id"
+                    element={
+                      <>
+                        <BlogSection />
+                        <Details />
+                        <Carsouel />
+                      </>
+                    }
+                  />
+                  <Route path="/" element={<BlogCards />} />
+                </Routes>
+              </Layout>
+            }
+          />
 
-        {/* Routes cho admin */}
-        <Route path="/admin/*"element={<AdminLayout>
-              <Routes>
-                <Route path="manageUser"element={ <ProtectedRoute><ManagerUser /> </ProtectedRoute>}/>
-                <Route path="addUser" element={ <ProtectedRoute> <CreateUser /> </ProtectedRoute>} />
-                <Route path="updateUser/:id" element={ <ProtectedRoute> <UpdateUser/> </ProtectedRoute>} />
-                <Route path="manageProduct"element={ <ProtectedRoute><ManageProduct /> </ProtectedRoute>}/>
-                <Route path="addProduct" element={ <ProtectedRoute> <CreateProduct /> </ProtectedRoute>} />
-                <Route path="updateProduct/:id" element={ <ProtectedRoute> <UpdateProduct/> </ProtectedRoute>} />
-              </Routes>
-            </AdminLayout>
-          }
-        />
-      </Routes>
+          {/* Routes cho admin */}
+          <Route
+            path="/admin/*"
+            element={
+              <AdminLayout>
+                <Routes>
+                  <Route
+                    path="manageUser"
+                    element={
+                      <ProtectedRoute>
+                        <ManagerUser />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="addUser"
+                    element={
+                      <ProtectedRoute>
+                        <CreateUser />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="updateUser/:id"
+                    element={
+                      <ProtectedRoute>
+                        <UpdateUser />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="manageProduct"
+                    element={
+                      <ProtectedRoute>
+                        <ManageProduct />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="addProduct"
+                    element={
+                      <ProtectedRoute>
+                        <CreateProduct />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="updateProduct/:id"
+                    element={
+                      <ProtectedRoute>
+                        <UpdateProduct />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="manageOrder"
+                    element={
+                      <ProtectedRoute>
+                        <ManageOrder />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="updateOrder/:id"
+                    element={
+                      <ProtectedRoute>
+                        <UpdateOrder />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </AdminLayout>
+            }
+          />
+        </Routes>
 
-      {/* ToastContainer để hiển thị thông báo */}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnHover
-        draggable
-      />
-    </BrowserRouter>
+        {/* ToastContainer để hiển thị thông báo */}
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+        />
+      </BrowserRouter>
+    </CartProvider>
   );
 };
+
 
 export default App;

@@ -1,23 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiLogout } from "../apis/auth";
 import { toast } from "react-toastify";
+import CartContext from "../components/CartContext";
 
 const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
-  const [userName, setUserName] = useState([]);
+  const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext); // Sử dụng CartContext
 
-  const getUserName = localStorage.getItem("name");
-  console.log(getUserName);
-  useEffect(
-    () => {
-      setUserName(getUserName);
-      console.log(userName);
-    },
-    [navigate]
-  );
-
+  // Hàm mở/đóng modal giỏ hàng
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -26,48 +18,46 @@ const Navbar = () => {
     setIsModalOpen(false);
   };
 
-  const handleQuantityChange = (action, quantityElement) => {
-    let quantity = parseInt(quantityElement.innerText);
-    if (action === "increase") {
-      quantity++;
-    } else if (action === "decrease" && quantity > 1) {
-      quantity--;
-    }
-    quantityElement.innerText = quantity;
-    updateTotal();
-  };
-
-  const updateTotal = () => {
-    let total = 0;
-    document.querySelectorAll(".border-b").forEach(item => {
-      const price = parseInt(
-        item
-          .querySelector("p.text-gray-600")
-          .innerText.replace("đ", "")
-          .replace(".", "")
-      );
-      const quantity = parseInt(item.querySelector(".quantity").innerText);
-      total += price * quantity;
-    });
-    document.getElementById("totalPrice").innerText =
-      total.toLocaleString() + "đđ";
-  };
-
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleLogout = async () => {
-    try {
-      await apiLogout();
-      navigate("/login");
-      toast.success("Đăng Xuất Thành công!");
-    } catch (err) {
-      toast.error("Đăng Xuất Thất Bại, Hãy Thử Lại!");
+  // Hàm xử lý thay đổi số lượng sản phẩm trong giỏ hàng
+  const handleQuantityChange = (productId, action) => {
+    const product = cartItems.find(item => item.id === productId);
+    if (product) {
+      const newQuantity =
+        action === "increase"
+          ? product.quantity + 1
+          : Math.max(1, product.quantity - 1);
+      updateQuantity(productId, newQuantity);
     }
   };
+
+  // Hàm xóa sản phẩm khỏi giỏ hàng
+  const handleRemoveItem = productId => {
+    removeFromCart(productId);
+    toast.success("Xóa sản phẩm khỏi giỏ hàng thành công!");
+  };
+
+  const handleThanhToan = () => {
+    navigate("/checkout");
+    handleCloseModal();
+  };
+
+  // Hàm tính tổng giá trị giỏ hàng
+  const calculateTotal = () => {
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  };
+
+  // Hàm đăng xuất
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("id");
+    localStorage.removeItem("name");
+    toast.success("Đăng xuất thành công!");
+    navigate("/login");
+  };
+
   return (
     <header className="bg-[#e6e7ee]">
       <nav className="border border-[#d1d9e6] box-shadow">
@@ -87,7 +77,7 @@ const Navbar = () => {
                     <ul className="dropdown-menu hidden group-hover:block absolute rounded-[8.8px] box-shadow bg-[#e6e7ee] py-4 w-[300px] border border-[#d1d9e6] mt-4 z-30">
                       <li>
                         <a
-                          href="../../html/pages/about.html"
+                          href="/about"
                           className="block w-full py-2 px-4 hover:cursor-pointer hover:shadow-customInset rounded-[8.8px]"
                         >
                           About
@@ -95,7 +85,7 @@ const Navbar = () => {
                       </li>
                       <li>
                         <a
-                          href="/pricing"
+                          href="/product"
                           className="block w-full py-2 px-4 hover:cursor-pointer hover:shadow-customInset rounded-[8.8px]"
                         >
                           Pricing
@@ -107,22 +97,6 @@ const Navbar = () => {
                           className="block w-full py-2 px-4 hover:cursor-pointer hover:shadow-customInset rounded-[8.8px]"
                         >
                           Contact
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="../../html/pages/about.html"
-                          className="block w-full py-2 px-4 hover:cursor-pointer hover:shadow-customInset rounded-[8.8px]"
-                        >
-                          Sign in
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="../../html/pages/about.html"
-                          className="block w-full py-2 px-4 hover:cursor-pointer hover:shadow-customInset rounded-[8.8px]"
-                        >
-                          Sign up
                         </a>
                       </li>
                     </ul>
@@ -301,99 +275,56 @@ const Navbar = () => {
                     </div>
                   </li>
                   <li className="group mr-6 p-4 font-normal">
-                    <a className="">
-                      Support
+                    <a className="" href="/pro">
+                      {" "}Support
                       <span className="group-hover:rotate-180 duration-300 fas fa-angle-down nav-link-arrow ml-2" />
                     </a>
-                    <ul className="dropdown-menu hidden group-hover:block absolute rounded-[8.8px] box-shadow bg-[#e6e7ee] border border-[#d1d9e6] mt-4 z-30">
-                      <li className="flex">
-                        <a
-                          href="https://themesberg.com/docs/neumorphism-ui/getting-started/quick-start/"
-                          target="_blank"
-                          className="list-group-item list-group-item-action flex items-center p-0 py-4 px-6"
-                        >
-                          <span className="icon text-2xl icon-secondary">
-                            <span className="fas fa-file-alt" />
-                          </span>
-                          <div className="flex flex-col ms-4">
-                            <span className="text-dark">
-                              Documentation
-                              <span className="badge badge-sm badge-secondary align-middle ms-2">
-                                v1.0
-                              </span>
-                            </span>
-                            <span className="small text-muted">
-                              Examples and guides
-                            </span>
-                          </div>
-                        </a>
-                      </li>
-                      <li className="flex">
-                        <a
-                          href="https://themesberg.com/docs/neumorphism-ui/getting-started/quick-start/"
-                          target="_blank"
-                          className="list-group-item list-group-item-action flex items-center p-0 py-4 px-6"
-                        >
-                          <span className="icon text-2xl icon-secondary">
-                            <span className="fas fa-microphone-alt" />
-                          </span>
-                          <div className="flex flex-col ms-4">
-                            <span className="text-dark">
-                              Support
-                              <span className="badge badge-sm badge-secondary align-middle ms-2">
-                                v1.0
-                              </span>
-                            </span>
-                            <span className="small text-muted">
-                              Looking for answers? Ask us!
-                            </span>
-                          </div>
-                        </a>
-                      </li>
-                    </ul>
                   </li>
                 </ul>
               </div>
               <div className="button flex flex-wrap">
+                {/* Nút giỏ hàng */}
                 <div className="docs">
                   <button
-                    id="openModal"
                     onClick={handleOpenModal}
                     className="hover:shadow-customInset hover:cursor-pointer box-shadow rounded-[8.8px] flex py-2 px-4 text-center items-center mr-4 border border-[#d1d9e6] text-[16px] font-normal"
                   >
                     <i className="fas fa-cart-plus mr-2" /> Cart{" "}
                     <span className="cartQuantity badge badge-pill badge-success rounded-[10rem] ml-2">
-                      0
+                      {cartItems.length}
                     </span>
                   </button>
                 </div>
+
+                {/* Dropdown người dùng */}
                 <div className="Update">
                   <div className="relative">
-                    {/* Avatar */}
                     <button
-                      onClick={toggleDropdown}
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                       className="hover:shadow-customInset hover:cursor-pointer box-shadow rounded-[8.8px] flex py-2 px-4 text-center items-center border border-[#d1d9e6] text-[#2d4cc8] text-[16px] font-normal"
                     >
                       <img
-                        src="https://randomuser.me/api/portraits/men/1.jpg" // Thay bằng URL avatar của bạn
+                        src="https://randomuser.me/api/portraits/men/1.jpg"
                         alt="Avatar"
                         className="w-8 h-8 rounded-full mr-2"
                       />
-                      <span>{userName}</span> {/* Thay bằng tên người dùng */}
+                      <span>
+                        {localStorage.getItem("name")}
+                      </span>
                       <i className="fas fa-angle-down ml-2" />
                     </button>
 
-                    {/* Dropdown Menu */}
+                    {/* Dropdown menu */}
                     {isDropdownOpen &&
                       <div className="absolute right-0 mt-2 w-48 rounded-[8.8px] box-shadow bg-[#e6e7ee] border border-[#e6e7ee] z-30">
                         <ul>
                           <li>
                             <a
-                              href="/profile" // Thay bằng đường dẫn đến trang hồ sơ
+                              href="/profile"
                               className="block w-full py-2 px-4 hover:bg-gray-100 rounded-[8.8px]"
                             >
                               Hồ sơ
-                            </a>
+                            </a>{" "}
                           </li>
                           <li>
                             <a
@@ -421,104 +352,80 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Cart Modal */}
+      {/* Modal giỏ hàng */}
       {isModalOpen &&
-        <div className="fixed inset-0 flex items-center justify-center bg-black !z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 !z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-[600px]">
-            <h2 className="text-2xl font-semibold mb-4">Cart</h2>
+            <h2 className="text-2xl font-semibold mb-4">Giỏ hàng</h2>
             <div className="space-y-4">
-              <div className="flex items-center justify-between border-b pb-2">
-                <div className="flex items-center">
-                  <img
-                    src="https://demo.themesberg.com/neumorphism-ui/assets/img/blog/blog-article-1.jpg"
-                    className="w-12 h-12 rounded-md"
-                    alt="Product A"
-                  />
-                  <div className="ml-3">
-                    <p className="text-gray-800 font-medium">Product A</p>
-                    <p className="text-gray-600 text-sm">200.000đ</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    className="qty-btn px-2 py-1 bg-gray-200 rounded text-gray-700"
-                    onClick={() =>
-                      handleQuantityChange(
-                        "decrease",
-                        document.querySelector(".quantity")
-                      )}
-                  >
-                    −
-                  </button>
-                  <span className="quantity text-gray-800">1</span>
-                  <button
-                    className="qty-btn px-2 py-1 bg-gray-200 rounded text-gray-700"
-                    onClick={() =>
-                      handleQuantityChange(
-                        "increase",
-                        document.querySelector(".quantity")
-                      )}
-                  >
-                    +
-                  </button>
-                  <button className="remove-btn text-red-500 hover:text-red-700 text-lg">
-                    ✖
-                  </button>
-                </div>
-              </div>
-              <div className="flex items-center justify-between border-b pb-2">
-                <div className="flex items-center">
-                  <img
-                    src="https://demo.themesberg.com/neumorphism-ui/assets/img/blog/blog-article-2.jpg"
-                    className="w-12 h-12 rounded-md"
-                    alt="Product B"
-                  />
-                  <div className="ml-3">
-                    <p className="text-gray-800 font-medium">Product B</p>
-                    <p className="text-gray-600 text-sm">300.000đ</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    className="qty-btn px-2 py-1 bg-gray-200 rounded text-gray-700"
-                    onClick={() =>
-                      handleQuantityChange(
-                        "decrease",
-                        document.querySelector(".quantity")
-                      )}
-                  >
-                    −
-                  </button>
-                  <span className="quantity text-gray-800">2</span>
-                  <button
-                    className="qty-btn px-2 py-1 bg-gray-200 rounded text-gray-700"
-                    onClick={() =>
-                      handleQuantityChange(
-                        "increase",
-                        document.querySelector(".quantity")
-                      )}
-                  >
-                    +
-                  </button>
-                  <button className="remove-btn text-red-500 hover:text-red-700 text-lg">
-                    ✖
-                  </button>
-                </div>
-              </div>
+              {cartItems.length > 0
+                ? cartItems.map(item =>
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between border-b pb-2"
+                    >
+                      <div className="flex items-center">
+                        <img
+                          src={item.image}
+                          className="w-12 h-12 rounded-md"
+                          alt={item.name}
+                        />
+                        <div className="ml-3">
+                          <p className="text-gray-800 font-medium">
+                            {item.name}
+                          </p>
+                          <p className="text-gray-600 text-sm">
+                            {item.price.toLocaleString()}đ
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          className="qty-btn px-2 py-1 bg-gray-200 rounded text-gray-700"
+                          onClick={() =>
+                            handleQuantityChange(item.id, "decrease")}
+                        >
+                          −
+                        </button>
+                        <span className="quantity text-gray-800">
+                          {item.quantity}
+                        </span>
+                        <button
+                          className="qty-btn px-2 py-1 bg-gray-200 rounded text-gray-700"
+                          onClick={() =>
+                            handleQuantityChange(item.id, "increase")}
+                        >
+                          +
+                        </button>
+                        <button
+                          className="remove-btn text-red-500 hover:text-red-700 text-lg"
+                          onClick={() => handleRemoveItem(item.id)}
+                        >
+                          ✖
+                        </button>
+                      </div>
+                    </div>
+                  )
+                : <p className="text-center text-gray-500">Giỏ hàng trống</p>}
             </div>
             <div className="flex justify-between font-semibold text-gray-800 mt-4">
-              <span>Total:</span>
-              <span id="totalPrice">800.000đ</span>
+              <span>Tổng cộng:</span>
+              <span id="totalPrice">
+                {calculateTotal().toLocaleString()}đ
+              </span>
             </div>
             <div className="flex justify-end mt-4 space-x-2">
               <button
                 onClick={handleCloseModal}
                 className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
               >
-                Close
+                Đóng
               </button>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                Checkout
+              <button
+                onClick={handleThanhToan}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Thanh toán
               </button>
             </div>
           </div>

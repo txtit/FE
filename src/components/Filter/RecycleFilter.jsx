@@ -18,12 +18,12 @@ const DropdownFilter = ({ onChange }) => {
       const lastSegment = pathSegments[pathSegments.length - 1]; // Phần cuối của đường dẫn
 
       // Kiểm tra giá trị cuối cùng trong đường dẫn và cập nhật giá trị cho selectedValue
-      if (lastSegment === "manage-user") {
+      if (lastSegment === "manageUser") {
         setSelectedValue("user");
-      } else if (lastSegment === "manage-dental") {
-        setSelectedValue("dental");
-      } else if (lastSegment === "manage-product") {
+      } else if (lastSegment === "manageProduct") {
         setSelectedValue("product");
+      } else if (lastSegment === "manageOrder") {
+        setSelectedValue("order");
       }
     },
     [location]
@@ -68,8 +68,8 @@ const DropdownFilter = ({ onChange }) => {
           Chọn
         </option>
         <option value="user">Người Dùng</option>
-        <option value="dental">Nha Khoa</option>
         <option value="product">Sản Phẩm</option>
+        <option value="order">Đơn Hàng</option>
       </select>
     </div>
   );

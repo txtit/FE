@@ -2,6 +2,10 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { apiGetProductById, apiUpdateProductById } from "../../../apis/product";
+import {
+  apiCreateCategories,
+  apiGetAllCategories
+} from "../../../apis/categories";
 
 const UpdateProduct = () => {
   const { id } = useParams();
@@ -11,7 +15,7 @@ const UpdateProduct = () => {
     name: "",
     price: "",
     description: "",
-    categories: ""
+    category_id: ""
   });
   const [categoriesList, setCategoriesList] = useState([]);
   const [errors, setErrors] = useState({});
@@ -27,7 +31,7 @@ const UpdateProduct = () => {
             name: data.name || "",
             price: data.price || "",
             description: data.description || "",
-            categories: data.categories || ""
+            category_id: data.category_id || ""
           });
         }
       } catch (error) {
@@ -38,17 +42,16 @@ const UpdateProduct = () => {
     },
     [id]
   );
-
-  // const fetchCategories = useCallback(async () => {
-  //   try {
-  //     const data = await apiGe();
-  //     if (data) {
-  //       setCategoriesList(data);
-  //     }
-  //   } catch (error) {
-  //     toast.error("Không thể tải danh sách danh mục!");
-  //   }
-  // }, []);
+  const fetchCategories = useCallback(async () => {
+    try {
+      const data = await apiGetAllCategories();
+      if (data) {
+        setCategoriesList(data.data);
+      }
+    } catch (error) {
+      toast.error("Không thể tải danh sách danh mục!");
+    }
+  }, []);
 
   useEffect(
     () => {
@@ -58,10 +61,13 @@ const UpdateProduct = () => {
     [fetchProduct, fetchCategories]
   );
 
+  console.log(categoriesList);
+
   const handleInputChange = event => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
+  console.log(formData);
 
   const validateForm = () => {
     let newErrors = {};
@@ -71,7 +77,7 @@ const UpdateProduct = () => {
       newErrors.price = "Giá sản phẩm phải lớn hơn 0";
     if (!formData.description)
       newErrors.description = "Mô tả không được để trống";
-    if (!formData.categories) newErrors.categories = "Vui lòng chọn danh mục";
+    if (!formData.category_id) newErrors.categories = "Vui lòng chọn danh mục";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -150,9 +156,9 @@ const UpdateProduct = () => {
         <div>
           <label className="block text-sm font-medium">Danh mục</label>
           <select
-            name="categories"
+            name="category_id"
             className="w-full border p-2 rounded"
-            value={formData.categories}
+            value={formData.category_id}
             onChange={handleInputChange}
           >
             <option value="">Chọn danh mục</option>

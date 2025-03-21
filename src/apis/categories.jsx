@@ -7,9 +7,9 @@ const API = axios.create({
 });
 
 // Các hàm gọi API
-export const apiCreateCategories = async (productData) => {
+export const apiCreateCategories = async (categoryData) => {
     try {
-      const response = await API.post("/products", productData); // Gửi POST request đến endpoint "/products"
+      const response = await API.post("/category", categoryData); // Gửi POST request đến endpoint "/category"
       return response.data; // Trả về dữ liệu từ API
     } catch (error) {
       console.error("Lỗi khi tạo sản phẩm:", error);
@@ -21,15 +21,15 @@ export const apiCreateCategories = async (productData) => {
       const token = localStorage.getItem("token"); // Lấy token từ localStorage
       if (!token) throw new Error("Không tìm thấy token!");
   
-      const response = await API.get("/products", {
+      const response = await API.get("/category", {
         headers: { Authorization: `Bearer ${token}` },
       });
   
-      console.log("Thông tin product:", response);
-      return response; // Trả về dữ liệu product
+      console.log("Thông tin category:", response);
+      return response; // Trả về dữ liệu category
   
     } catch (error) {
-      console.error("Lỗi khi lấy product:", error.response?.data || error.message);
+      console.error("Lỗi khi lấy category:", error.response?.data || error.message);
       return null; // Trả về null nếu có lỗi
     }
   };
@@ -41,15 +41,15 @@ export const apiCreateCategories = async (productData) => {
       const token = localStorage.getItem("token"); // Lấy token từ localStorage
       if (!token) throw new Error("Không tìm thấy token!");
   
-      const response = await API.get(`/products/${id}`, {
+      const response = await API.get(`/category/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
   
-      console.log("Thông tin product:", response.data);
-      return response.data; // Trả về dữ liệu product
+      console.log("Thông tin category:", response.data);
+      return response.data; // Trả về dữ liệu category
   
     } catch (error) {
-      console.error("Lỗi khi lấy product:", error.response?.data || error.message);
+      console.error("Lỗi khi lấy category:", error.response?.data || error.message);
       return null; // Trả về null nếu có lỗi
     }
   };
@@ -59,18 +59,18 @@ export const apiCreateCategories = async (productData) => {
   
   //     const token = localStorage.getItem("token"); // Lấy token từ localStorage
   //     if (!token) throw new Error("Không tìm thấy token!");
-  //     const response = await API.put(`/products/${id}`, {
+  //     const response = await API.put(`/category/${id}`, {
         
   //       headers: { 
   //         "Content-Type": "application/json",
   //         Authorization: `Bearer ${token}` },
   //     });
   
-  //     console.log("Thông tin product:", response.data);
-  //     return response.data; // Trả về dữ liệu product
+  //     console.log("Thông tin category:", response.data);
+  //     return response.data; // Trả về dữ liệu category
   
   //   } catch (error) {
-  //     console.error("Lỗi khi lấy product:", error.response?.data || error.message);
+  //     console.error("Lỗi khi lấy category:", error.response?.data || error.message);
   //     return null; // Trả về null nếu có lỗi
   //   }
   // };
@@ -83,15 +83,15 @@ export const apiCreateCategories = async (productData) => {
       if (!token) throw new Error("Không tìm thấy token!");
   
       // Gửi yêu cầu PUT để cập nhật thông tin người dùng
-      const response = await API.put(`/products/${id}`, updatedData, {
+      const response = await API.put(`/category/${id}`, updatedData, {
         headers: { Authorization: `Bearer ${token}` },
       });
   
-      console.log("Thông tin product sau khi cập nhật:", response.data);
-      return response.data; // Trả về dữ liệu product đã cập nhật
+      console.log("Thông tin category sau khi cập nhật:", response.data);
+      return response.data; // Trả về dữ liệu category đã cập nhật
   
     } catch (error) {
-      console.error("Lỗi khi cập nhật product:", error.response?.data || error.message);
+      console.error("Lỗi khi cập nhật category:", error.response?.data || error.message);
   
       // Xử lý lỗi 401 (Unauthorized)
       if (error.response?.status === 401) {
@@ -112,15 +112,15 @@ export const apiCreateCategories = async (productData) => {
       const token = localStorage.getItem("token"); // Lấy token từ localStorage
       if (!token) throw new Error("Không tìm thấy token!");
   
-      const response = await API.delete(`/products/${id}`, {
+      const response = await API.delete(`/category/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
   
-      console.log("Thông tin product:", response);
+      console.log("Thông tin category:", response);
       return response; 
   
     } catch (error) {
-      console.error("Lỗi khi lấy product:", error.response );
+      console.error("Lỗi khi lấy category:", error.response );
       return null; 
     }
   };

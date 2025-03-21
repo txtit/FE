@@ -8,20 +8,21 @@ const Login = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = async data => {
+  const onSubmit = async (data) => {
     try {
       const response = await apiLogin(data);
-      console.log("API Response:", response); // Kiểm tra phản hồi từ API
-  
-      if (response?.status == 200) {
+      console.log("API Response:", response);
+
+      if (response?.status === 200) {
         navigate("/profile");
         toast.success("Đăng nhập thành công");
       } else {
-        throw new Error(response?.message || "Lỗi không xác định");
+      toast.error(`Đăng nhập thất bại: ${response.data.error}`);
       }
     } catch (error) {
+      
       console.error("Đăng nhập lỗi:", error);
-      toast.error(`Đăng nhập thất bại: ${error.message}`);
+      toast.error(`Sai thông tin đăng nhập`);
     }
   };
 
@@ -36,11 +37,11 @@ const Login = () => {
               type="email"
               {...register("email", { required: "Email không được để trống" })}
               className="w-full px-4 py-2 border rounded-md"
+              aria-invalid={errors.email ? "true" : "false"}
             />
-            {errors.email &&
-              <p className="text-red-500 text-sm">
-                {errors.email.message}
-              </p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
           </div>
 
           <div>
@@ -48,14 +49,14 @@ const Login = () => {
             <input
               type="password"
               {...register("password", {
-                required: "Mật khẩu không được để trống"
+                required: "Mật khẩu không được để trống",
               })}
               className="w-full px-4 py-2 border rounded-md"
+              aria-invalid={errors.password ? "true" : "false"}
             />
-            {errors.password &&
-              <p className="text-red-500 text-sm">
-                {errors.password.message}
-              </p>}
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
           </div>
 
           <button
@@ -64,6 +65,7 @@ const Login = () => {
           >
             Đăng nhập
           </button>
+
           <p className="text-center text-sm text-gray-600 mt-2">
             Chưa có tài khoản?{" "}
             <span
@@ -73,6 +75,15 @@ const Login = () => {
               Đăng ký ngay
             </span>
           </p>
+
+          <div className="text-center">
+            <span
+              className="text-blue-500 cursor-pointer"
+              onClick={() => navigate("/forgot-password")}
+            >
+              Quên mật khẩu
+            </span>
+          </div>
         </form>
       </div>
     </div>

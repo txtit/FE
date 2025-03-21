@@ -43,7 +43,7 @@ const ManageUser = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Quản lý Người dùng</h1>
+      {/* <h1 className="text-2xl font-bold mb-4">Quản lý Người dùng</h1> */}
       {/* Ô tìm kiếm
       <TextField
         label="Tìm kiếm..."

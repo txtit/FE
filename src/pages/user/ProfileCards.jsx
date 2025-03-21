@@ -12,10 +12,15 @@ const ProfileCard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const data = await apiGetUser();
-      console.log(data.name);
       if (data) {
         setUser([data]);
-        setFormData(data)
+        setFormData((prev) => ({
+          ...prev,
+          name: data.name || prev.name, 
+          role: data.role || prev.role, 
+          email: data.email || prev.email
+      }));
+      
       }
     };
     fetchUser();
@@ -35,21 +40,47 @@ const ProfileCard = () => {
   // Xử lý khi nhấn "Lưu"
   const handleSaveClick = async () => {
     console.log("Lưu dữ liệu:", formData);
-     try {
-          // Call API to update user
-          const response = await apiUpdateUser( formData);
-    
-          if (response) {
-            toast.success("User updated successfully");
-          } else {
-            toast.error(response.message || "Failed to update user");
-          }
-        } catch (error) {
-          toast.error("Server error, please try again later");
-        }
-    setUser(formData); // Cập nhật lại user với dữ liệu mới
-    setIsEditable(false);
+  
+    // try {
+      // Gọi API để cập nhật thông tin user
+      const updatedUser = await apiUpdateUser(formData);
+      console.log("Phản hồi từ API:", updatedUser);
+  
+      // Hiển thị thông báo thành công
+      toast.success("Cập nhật thông tin user thành công!");
+  
+      // Cập nhật lại state user với dữ liệu mới
+      setUser(updatedUser);
+
+      // Tắt chế độ chỉnh sửa
+      setIsEditable(false);
+      window.location.reload();
+
+
+    // } catch (error) {
+    //   console.error("Lỗi khi cập nhật user:", error);
+  
+    //   // Hiển thị thông báo lỗi
+    //   toast.error(error.response?.data?.message || "Lỗi server, vui lòng thử lại sau.");
+    // }
   };
+  // const handleSaveClick = async () => {
+  //   console.log("Lưu dữ liệu:", formData);
+  //    try {
+  //         // Call API to update user
+  //         const response = await apiUpdateUser(formData);
+  //         console.log(response.data);
+  //         if (response.status ==200) {
+  //           toast.success("User updated successfully");
+  //         } else {
+  //           toast.error(response.message || "Failed to update user");
+  //         }
+  //       } catch (error) {
+  //         toast.error("Server error, please try again later");
+  //       }
+  //   setUser(formData); // Cập nhật lại user với dữ liệu mới
+  //   setIsEditable(false);
+  // };
 
   // Xử lý thay đổi input
   const handleInputChange = (e) => {
