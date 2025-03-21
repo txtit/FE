@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
-import { apiCreateOrder } from "../../apis/Order";
 import CartContext from "../../components/CartContext";
+import { apiCreateOrder } from "../../apis/Order";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
