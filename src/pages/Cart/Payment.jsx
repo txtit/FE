@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CartContext from "../../components/CartContext";
-import { apiCreateOrder } from "../../apis/Order";
+// import { apiCreateOrder } from "../../apis/Order";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -21,37 +21,37 @@ const CheckoutPage = () => {
   };
 
   // Hàm xử lý tạo đơn hàng
-  const handleCreateOrder = async () => {
-    const userId = localStorage.getItem("id"); // Lấy user_id từ localStorage
-    const orderName = `Đơn hàng từ ${customerName}`; // Tạo tên đơn hàng
+  // const handleCreateOrder = async () => {
+  //   const userId = localStorage.getItem("id"); // Lấy user_id từ localStorage
+  //   const orderName = `Đơn hàng từ ${customerName}`; // Tạo tên đơn hàng
 
-    // Chuẩn bị dữ liệu đơn hàng
-    const orderData = {
-      user_id: userId,
-      name: orderName,
-      products: cartItems.map(item => ({
-        product_id: item.id,
-        quantity: item.quantity
-      }))
-    };
+  //   // Chuẩn bị dữ liệu đơn hàng
+  //   const orderData = {
+  //     user_id: userId,
+  //     name: orderName,
+  //     products: cartItems.map(item => ({
+  //       product_id: item.id,
+  //       quantity: item.quantity
+  //     }))
+  //   };
 
-    try {
-      // Gửi yêu cầu POST đến API
-      const response = await apiCreateOrder(orderData);
-      console.log(response);
-      if (response) {
-        toast.success("Tạo đơn hàng thành công!");
-        clearCart(); // Xóa giỏ hàng sau khi tạo đơn hàng
-        navigate("/"); // Chuyển hướng về trang chủ
-      } else {
-        toast.error("Tạo đơn hàng thất bại!");
-        console.error("Lỗi khi tạo đơn hàng:", response);
-      }
-    } catch (error) {
-      toast.error("Đã xảy ra lỗi khi tạo đơn hàng!");
-      console.error("Lỗi API:", error);
-    }
-  };
+  //   try {
+  //     // Gửi yêu cầu POST đến API
+  //     const response = await apiCreateOrder(orderData);
+  //     console.log(response);
+  //     if (response) {
+  //       toast.success("Tạo đơn hàng thành công!");
+  //       clearCart(); // Xóa giỏ hàng sau khi tạo đơn hàng
+  //       navigate("/"); // Chuyển hướng về trang chủ
+  //     } else {
+  //       toast.error("Tạo đơn hàng thất bại!");
+  //       console.error("Lỗi khi tạo đơn hàng:", response);
+  //     }
+  //   } catch (error) {
+  //     toast.error("Đã xảy ra lỗi khi tạo đơn hàng!");
+  //     console.error("Lỗi API:", error);
+  //   }
+  // };
 
   // Hàm xử lý thanh toán
   const handleCheckout = () => {
@@ -67,7 +67,7 @@ const CheckoutPage = () => {
     }
 
     // Gọi hàm tạo đơn hàng
-    handleCreateOrder();
+    // handleCreateOrder();
   };
 
   // Hàm tính tổng giá trị giỏ hàng
