@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { IconButton, Pagination, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { apiGetAllOrder } from "../../../apis/Order";
+// import { apiGetAllOrder } from "../../../apis/Order";
 
 const ManageOrder = () => {
   const [Orders, setOrders] = useState([]);
@@ -12,23 +12,23 @@ const ManageOrder = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 5;
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await apiGetAllOrder();
-        console.log(response.data.map(order => order.user.name));
+  // useEffect(() => {
+  //   const fetchOrders = async () => {
+  //     try {
+  //       const response = await apiGetAllOrder();
+  //       console.log(response.data.map(order => order.user.name));
 
-        if (response.status === 200) {
-          setOrders(response.data);
-        } else {
-          toast.error("Lỗi khi tải dữ liệu đơn hàng");
-        }
-      } catch (error) {
-        toast.error("Lỗi kết nối máy chủ");
-      }
-    };
-    fetchOrders();
-  }, []);
+  //       if (response.status === 200) {
+  //         setOrders(response.data);
+  //       } else {
+  //         toast.error("Lỗi khi tải dữ liệu đơn hàng");
+  //       }
+  //     } catch (error) {
+  //       toast.error("Lỗi kết nối máy chủ");
+  //     }
+  //   };
+  //   fetchOrders();
+  // }, []);
   // Lọc danh sách đơn hàng theo từ khóa tìm kiếm
   const filteredOrders = Orders.filter(
     Order => Order.name.toLowerCase().includes(searchTerm.toLowerCase())
